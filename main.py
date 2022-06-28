@@ -1,7 +1,7 @@
 #This program is supposed to predict the next key you press
 #
 #
-
+import pickle
 import keyboard
 
 def evaluation(exp_key, key_press, score):
@@ -14,16 +14,7 @@ def evaluation(exp_key, key_press, score):
         print('Wrong Guess')
     
 
-#def guess(last_keys, pattern):
-    #x = 'a'
-    #if pattern.count(last_keys[1:]+'a') > pattern.count(last_keys[1:]+'f'):
-        #x = 'a'
-    #elif pattern.count(last_keys[1:]+'f') > pattern.count(last_keys[1:]+'a'):
-        #x='f'
-    #else:
-        #x= 'a'
- 
-    #return x
+
 def guess(last_keys, pat_dict):
     x = 'a'
     a = last_keys[1:]+'a'
@@ -44,7 +35,7 @@ def guess(last_keys, pat_dict):
     else:
         x= 'a'
     return x
-    
+
 pattern = []
 pat_dict = {}
 pattern_length = 4
@@ -54,6 +45,7 @@ last_keys = ''
 exp_key = 'a'
 run = True
 while run:
+    event = keyboard.read_event()
     #Beginning, append keypresses until enough
     if len(last_keys)>=pattern_length:
         #pattern.append(last_keys)
@@ -62,13 +54,17 @@ while run:
         else: 
             pat_dict[last_keys] = 1
         last_keys = last_keys[1:]
+    
 
     # 2 Keys to decide between
-    if keyboard.read_key() == 'a':
+    #if keyboard.read_key() == 'a':
+    if event.event_type == keyboard.KEY_DOWN and event.name == 'a':
+        print('a')
         evaluation(exp_key, 'a', score)
         last_keys = last_keys + 'a'
         exp_key = guess(last_keys,pat_dict)
-    if keyboard.read_key()== 'f':
+    #if keyboard.read_key()== 'f':
+    if event.event_type == keyboard.KEY_DOWN and event.name == 'f':
         evaluation(exp_key, 'f', score)
         last_keys = last_keys +'f'
         exp_key = guess(last_keys,pat_dict)
